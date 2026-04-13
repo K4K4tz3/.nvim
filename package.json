@@ -1,5 +1,6 @@
 {
   "dependencies": {
-    "pipx": "^1.0.1"
+    "pipx": "^1.0.1",
+    "ripgrep": "^0.3.1"
   }
 }
