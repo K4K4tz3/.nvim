@@ -1,3 +1,7 @@
+vim.cmd("highlight Normal guibg=NONE ctermbg=NONE")
+vim.cmd("highlight NormalNC guibg=NONE ctermbg=NONE")
+vim.cmd("highlight EndOfBuffer guibg=NONE")
+
 -- basic settings
 vim.opt.relativenumber = true
 vim.opt.tabstop = 2
