@@ -5,6 +5,16 @@ return {
 	config = function()
 		local bufferline = require("bufferline")
 
-		bufferline.setup()
+		bufferline.setup({
+			options = {
+				mode = "tabs",
+				style_preset = bufferline.style_preset.default,
+				offsets = {
+					{
+						filetype = "neo-tree"
+					}
+				}
+			}
+		})
 	end,
 }
