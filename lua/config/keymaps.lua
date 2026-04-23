@@ -23,3 +23,6 @@ vim.keymap.set("n", "<C-S-h>", "<C-W>H", { desc = "Move to left window" })
 vim.keymap.set("n", "<C-S-j>", "<C-W>J", { desc = "Move to bottom window" })
 vim.keymap.set("n", "<C-S-k>", "<C-W>K", { desc = "Move to top window" })
 vim.keymap.set("n", "<C-S-l>", "<C-W>L", { desc = "Move to right window" })
+
+
+vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
