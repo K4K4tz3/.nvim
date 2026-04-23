@@ -8,9 +8,18 @@ vim.keymap.set("n", "<S-k>", ":resize -5<CR>", { desc = "Decrease buffer height"
 vim.keymap.set("n", "<S-l>", ":vertical resize +5<CR>", { desc = "Increase buffer width", silent = true })
 
 --
--- Window Self - Movement
+-- Window - Moving Around the Cursor
 --
 vim.keymap.set("n", "<C-h>", "<C-W>h", { desc = "Move to left window" })
 vim.keymap.set("n", "<C-j>", "<C-W>j", { desc = "Move to bottom window" })
 vim.keymap.set("n", "<C-k>", "<C-W>k", { desc = "Move to top window" })
 vim.keymap.set("n", "<C-l>", "<C-W>l", { desc = "Move to right window" })
+
+
+--
+-- Window - Moving Around the Windows
+--
+vim.keymap.set("n", "<C-S-h>", "<C-W>H", { desc = "Move to left window" })
+vim.keymap.set("n", "<C-S-j>", "<C-W>J", { desc = "Move to bottom window" })
+vim.keymap.set("n", "<C-S-k>", "<C-W>K", { desc = "Move to top window" })
+vim.keymap.set("n", "<C-S-l>", "<C-W>L", { desc = "Move to right window" })
