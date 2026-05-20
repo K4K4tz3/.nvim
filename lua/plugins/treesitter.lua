@@ -11,7 +11,7 @@ return {
 		require("nvim-treesitter.configs").setup({
 			parser_install_dir = parser_install_dir,
 			ensure_installed = { "lua", "vim", "vimdoc", "python", "cpp", "c",
-													"html", "css", "javascript" },
+													"html", "css", "javascript", "rust", "toml" },
 			highlight = { enable = true },
 			indent = { enable = true },
 		})
