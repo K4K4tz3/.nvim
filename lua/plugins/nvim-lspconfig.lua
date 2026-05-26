@@ -36,8 +36,21 @@ return {
 				filetypes = { "html", },
 			})
 
+			vim.lsp.config("tailwindcss", {
+				cmd = { "tailwindcss-language-server", "--stdio"},
+				filetypes = {
+					"html",
+					"css",
+					"scss",
+					"javascript",
+					"javascriptreact",
+					"typescript", 
+					"typescriptreact",
+				},
+			})
+
 			vim.lsp.enable({
-				"clangd", "pyright", "html", "emmet_language_server", "tailwindcss_language_server"
+				"clangd", "pyright", "html", "emmet_language_server", "tailwindcss_language_server", "tailwindcss"
 			})
     end,
   },
