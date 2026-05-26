@@ -26,3 +26,9 @@ vim.keymap.set("n", "<C-S-l>", "<C-W>L", { desc = "Move to right window" })
 
 
 vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float)
+
+
+--
+-- Neotree
+--
+vim.keymap.set("n", "<leader>t", ":Neotree position=left action=focus <CR>", { desc = "Opens NeoTree on the left and focus it", silent = true })
