@@ -31,5 +31,9 @@ return {
 				end,
 			})
 		end, { desc = "Find files (vsp)" })
+
+		vim.keymap.set("n", "<leader>ft", function()
+			builtin.live_grep()
+		end, { desc = "Find inputted string in directory" })
 	end,
 }
