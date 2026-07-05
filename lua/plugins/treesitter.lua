@@ -5,11 +5,7 @@ return {
 	lazy = false,
 
 	config = function()
-		local parser_install_dir = vim.fn.stdpath("data") .. "/site/parser"
-		vim.opt.runtimepath:prepend(parser_install_dir)
-
 		require("nvim-treesitter.configs").setup({
-			parser_install_dir = parser_install_dir,
 			ensure_installed = { "lua", "vim", "vimdoc", "python", "cpp", "c",
 													"html", "css", "javascript", "toml", "rust" },
 			highlight = { enable = true },
