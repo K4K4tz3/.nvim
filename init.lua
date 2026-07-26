@@ -6,7 +6,9 @@ vim.cmd("highlight EndOfBuffer guibg=NONE")
 vim.opt.relativenumber = true
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
-vim.opt.expandtab = false
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+vim.opt.cindent = true
 
 vim.g.python3_host_prog = "C:/Python314/python.exe"
 
