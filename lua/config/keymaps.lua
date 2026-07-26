@@ -1,4 +1,7 @@
 vim.g.mapleader = " "
+
+
+vim.keymap.set("n", "<Esc>", "<cmd>noh<CR><Esc>", { silent = true })
 --
 -- Window Resize Keybinds
 --
