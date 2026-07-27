@@ -5,7 +5,7 @@ return {
 		--@type ibl.config
 		opts = {
 			indent = {
-				char =  '║',
+				char =  '│',
 			},
 			scope = {
 				show_start = false,
