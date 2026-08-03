@@ -1,36 +1,62 @@
 local ls = require("luasnip")
 
-local snippet = ls.snippet
-local text = ls.text_node
-local insert = ls.insert_node
+local s = ls.snippet
+local t = ls.text_node
+local i = ls.insert_node
 
 return {
-  snippet("class", {
-    text("class "),
-    insert(1, "ClassName"),
-    text({ " {", "public:", " " }),
-    insert(2),
-    text({ "", "};" }),
-    insert(0),
+  s("class", {
+    t("class "),
+    i(1, "ClassName"),
+    t({ " {", "public:", " " }),
+    i(2),
+    t({ "", "};" }),
+    i(0),
   }),
-  snippet("sgetter", {
-    text("void set_"),
-    insert(1, "type"),
-    text("(const "),
-    insert(2, "Type"),
-    text(" &a_"),
+  s("sgetter", { -- Set/Get Function
+    t("void set_"),
+    i(1, "type"),
+    t("(const "),
+    i(2, "Type"),
+    t(" &a_"),
     rep(1),
-    text(") { m_"),
+    t(") { m_"),
     rep(1),
-    text(" = a_"),
+    t(" = a_"),
     rep(1),
-    text({ "; };", "" }),
+    t({ "; };", "" }),
     rep(2),
-    text(" get_"),
+    t(" get_"),
     rep(1),
-    text("() const { return m_"),
+    t("() const { return m_"),
     rep(1),
-    text("; };"),
-    insert(0),
+    t("; };"),
+    i(0),  
+  }),
+  s("BindMethod", { -- Bind Set/Get and Add Property
+    t('ClassDB::bind_method(D_METHOD("set_'),
+    i(1, "type"),
+    t('", "'),
+    i(2, "type_name"),
+    t('"), &'),
+    i(3, "class_name"),
+    t("::set_"),
+    rep(1),
+    t({ ");", 'ClassDB::bind_method(D_METHOD("get_'}),
+    rep(1),
+    t('"), &'),
+    rep(3),
+    t("::get_"),
+    rep(1),
+    t({ ');', 'ADD_PROPERTY(PropertyInfo(Variant::' }),
+    i(4, "TYPE"),
+    t(', "m_'),
+    rep(1),
+    t('"), "set_'),
+    rep(1),
+    t('", "get_'),
+    rep(1),
+    t('");'),
+    i(0),
   }),
 }
