@@ -15,5 +15,14 @@ return {
 				ls.change_choice(1)
 			end
 		end, {silent = true})
+
+    require("luasnip.loaders.from_lua").lazy_load({
+      paths = vim.fn.stdpath("config") .. "/luasnippets",
+    })
+
+    ls.config.setup({
+      history = true,
+      updateevents = "TextChanged,TextChangedI",
+    })
 	end,
 }
