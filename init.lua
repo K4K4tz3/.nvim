@@ -4,9 +4,12 @@ vim.cmd("highlight EndOfBuffer guibg=NONE")
 
 -- basic settings
 vim.opt.relativenumber = true
+
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
 vim.opt.expandtab = true
+
+vim.opt.autoindent = true
 vim.opt.smartindent = true
 vim.opt.cindent = true
 
@@ -43,6 +46,39 @@ require("config.lazy")
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = { 'python' },
 	callback = function() vim.treesitter.start() end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = { "c", "cpp" },
+  callback = function()
+    vim.bo.indentexpr = ""
+    vim.bo.cindent = true
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "markdown",
+  callback = function(args)
+    if vim.bo[args.buf].buftype == "nofile" then
+      vim.treesitter.stop(args.buf)
+    end
+  end,
+})
+
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = {
+    "c",
+    "cpp",
+    "javascript",
+    "html",
+    "lua",
+    "rust",
+    "python",
+    "markdown"
+  },
+  callback = function(args)
+    vim.treesitter.start(args.buf)
+  end
 })
 
 vim.keymap.set("i", "<C-Space>", function()
