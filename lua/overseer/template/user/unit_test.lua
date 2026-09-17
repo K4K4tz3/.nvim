@@ -4,7 +4,7 @@ return {
 
   builder = function()
     return {
-      cmd = "scons bin/tests debug_symbols=yes optimize=none && bin/tests",
+      cmd = "scons bin/tests debug_symbols=yes optimize=none && bin/tests --success --duration",
       cwd = vim.fn.getcwd(),
 
       components = {

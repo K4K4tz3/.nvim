@@ -4,11 +4,13 @@ return {
 
   builder = function()
     return {
-      cmd = { "scons", "platform=linux" },
+      cmd = { "scons", "compiledb=yes", "platform=linux" },
       cwd = vim.fn.getcwd(),
 
       components = {
         "default",
+        "user.build_sound",
+        "test.test_godot"
       },
     }
   end,
