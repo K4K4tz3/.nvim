@@ -4,8 +4,7 @@ return {
 
   builder = function()
     return {
-      cmd = {
-        "bin/tests --success --duration"},
+      cmd = "bin/tests --success --duration",
       cwd = vim.fn.getcwd(),
 
       components = {
