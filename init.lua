@@ -30,6 +30,7 @@ vim.pack.add{
 
 require("config.keymaps")
 require("config.lazy")
+require("panel").init()
 
 --vim.api.nvim_create_autocmd("LspAttach", {
 --	callback = function(ev)
