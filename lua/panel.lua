@@ -44,16 +44,18 @@ function Panel.create_neotree()
 end
 
 function Panel.create_overseer()
-  Panel.overseer = vim.api.nvim_open_win(0, false, {
-    split = "below",
-    win = -1,
-    height = 25
-  })
+  if Panel.overseer == nil then
+    Panel.overseer = vim.api.nvim_open_win(0, false, {
+      split = "below",
+      win = -1,
+      height = 25
+    })
 
-  require("overseer").toggle({
-    winid = Panel.overseer,
-  })
-  Panel.overseer_buf = vim.api.nvim_win_get_buf(Panel.overseer)
+    require("overseer").toggle({
+      enter = false,
+      winid = Panel.overseer
+    })
+  end
 end
 
 function Panel.apply_layout()
@@ -62,6 +64,7 @@ end
 
 function Panel.hide_overseer()
   vim.api.nvim_win_hide(Panel.overseer)
+  Panel.overseer = nil
 end
 
 function Panel.set_buf(file)
@@ -73,6 +76,25 @@ function Panel.set_buf_and_open(file)
   local buf = vim.fn.bufadd(file)
   vim.api.nvim_win_set_buf(Panel.win, buf)
   vim.api.nvim_set_current_win(Panel.win)
+end
+
+function Panel.test_dap()
+  require("dapui").open()
+
+  vim.schedule(function()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      print(
+        "buf: " , buf,
+        "name: " , vim.api.nvim_buf_get_name(buf),
+        "filetype: " , vim.bo[buf].filetype,
+        "buftype: " , vim.bo[buf].buftype
+      )
+    end
+  end)
+end
+
+function Panel.get_panel()
+  return Panel
 end
 
 return Panel
