@@ -85,3 +85,14 @@ vim.api.nvim_create_autocmd("FileType", {
 vim.keymap.set("i", "<C-Space>", function()
 	vim.lsp.completion.get()
 end)
+
+vim.api.nvim_create_autocmd({
+  "WinNew",
+  "WinClosed",
+}, {
+  callback = function()
+    vim.schedule(function()
+      require("panel").apply_layout()
+    end)
+  end,
+})

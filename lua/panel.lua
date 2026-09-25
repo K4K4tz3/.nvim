@@ -1,5 +1,8 @@
 local Panel = {
   win = nil,
+  neotree = nil,
+  overseer = nil,
+  overseer_buf = nil,
 }
 
 function Panel.test()
@@ -25,7 +28,7 @@ function Panel.init()
 end
 
 function Panel.create_neotree()
-  local neotree = vim.api.nvim_open_win(0, true, {
+  Panel.neotree = vim.api.nvim_open_win(0, true, {
     split = "left",
     win = -1,
     width = 30,
@@ -38,6 +41,27 @@ function Panel.create_neotree()
   })
 
   vim.api.nvim_set_current_win(Panel.win)
+end
+
+function Panel.create_overseer()
+  Panel.overseer = vim.api.nvim_open_win(0, false, {
+    split = "below",
+    win = -1,
+    height = 25
+  })
+
+  require("overseer").toggle({
+    winid = Panel.overseer,
+  })
+  Panel.overseer_buf = vim.api.nvim_win_get_buf(Panel.overseer)
+end
+
+function Panel.apply_layout()
+  vim.api.nvim_win_set_width(Panel.neotree, 30)
+end
+
+function Panel.hide_overseer()
+  vim.api.nvim_win_hide(Panel.overseer)
 end
 
 function Panel.set_buf(file)
