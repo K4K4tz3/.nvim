@@ -33,6 +33,17 @@ function Panel.init()
   Panel.open_neotree()
 end
 
+function Panel.apply_layout()
+  vim.api.nvim_win_set_width(Panel.windows.neotree, 30)
+  if Panel.windows.bottom_left ~= nil then
+    vim.api.nvim_win_set_height(Panel.windows.bottom_left, 10)
+    vim.api.nvim_win_set_width(Panel.windows.bottom_left, 60)
+  end
+  if Panel.windows.bottom_right ~= nil then
+    vim.api.nvim_win_set_height(Panel.windows.bottom_right, 10)
+  end
+end
+
 -- Cleans up windows that might not get closed before
 function Panel.cleanup_wins()
   local it = 1
@@ -86,25 +97,21 @@ function Panel.open_overseer()
     enter = false
   })
 
-  vim.schedule(function()
-    Panel.print_buffers()
 
-    Panel.contents.bottom_left = "OverseerList"
-    Panel.move_buf_into_win(
-      Panel.windows.bottom_left,
-      Panel.get_buf_by_filetype(Panel.contents.bottom_left)
-    )
+  Panel.contents.bottom_left = "OverseerList"
+  Panel.move_buf_into_win(
+    Panel.windows.bottom_left,
+    Panel.get_buf_by_filetype(Panel.contents.bottom_left)
+  )
 
-    Panel.print_buffers()
 
-    Panel.contents.bottom_right = "OverseerOutput"
-    Panel.move_buf_into_win(
-      Panel.windows.bottom_right,
-      Panel.get_buf_by_filetype(Panel.contents.bottom_right)
-    )
+  Panel.contents.bottom_right = "OverseerOutput"
+  Panel.move_buf_into_win(
+    Panel.windows.bottom_right,
+    Panel.get_buf_by_filetype(Panel.contents.bottom_right)
+  )
 
-    Panel.cleanup_wins()
-  end)
+  Panel.cleanup_wins()
 end
 
 function Panel.open_dap()
@@ -118,7 +125,14 @@ function Panel.open_dap()
 end
 
 function Panel.apply_layout()
-  --vim.api.nvim_win_set_width(Panel.neotree, 30)
+  vim.api.nvim_win_set_width(Panel.windows.neotree, 30)
+  if Panel.windows.bottom_left ~= nil then
+    vim.api.nvim_win_set_height(Panel.windows.bottom_left, 10)
+    vim.api.nvim_win_set_width(Panel.windows.bottom_left, 60)
+  end
+  if Panel.windows.bottom_right ~= nil then
+    vim.api.nvim_win_set_height(Panel.windows.bottom_right, 10)
+  end
 end
 
 function Panel.hide_overseer()
@@ -243,7 +257,6 @@ function Panel.move_buf_into_win(target_win, buf)
     return
   end
 
-  vim.notify(buf)
   if vim.api.nvim_buf_is_valid(buf) == false then
     vim.notify("Buffer[" .. buf .. "] is not valid",
       vim.log.levels.WARN,
