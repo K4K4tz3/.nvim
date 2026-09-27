@@ -7,17 +7,10 @@ return {
 			filter_rules = {
 				include_current_win = false,
 				autoselect_one = true,
-				bo = {
-					filetype = {
-						"neo-tree",
-						"neo-tree-popup",
-						"notify",
-					},
-					buftype = {
-						"terminal",
-						"quickfix",
-					},
-				},
+
+        filter_func = function(winid)
+          return winid == require("panel").windows.main
+        end,
 			},
 		})
 	end,

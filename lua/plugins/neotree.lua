@@ -20,21 +20,7 @@ return {
 							["w"] = "open_with_window_picker",
 							["S"] = "split_with_window_picker",
 							["s"] = "vsplit_with_window_picker",
-							["<cr>"] = function(state)
-                local node = state.tree:get_node()
-
-                if not node then 
-                  return
-                end
-
-                if node.type == "directory" then
-                  state.commands["open"](state)
-                end
-
-                if node.type == "file" then
-                  require("panel").set_buf_and_open(node.path)
-                end
-              end,
+							["<cr>"] = "open_with_window_picker",
 							["H"] = "none",
 						},
 					},
