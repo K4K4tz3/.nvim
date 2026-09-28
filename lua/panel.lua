@@ -30,6 +30,17 @@ function Panel.init()
     return
   end
 
+  vim.api.nvim_create_user_command(
+    'PanelOpenNeotree',
+    Panel.open_neotree,
+    {}
+  )
+  vim.api.nvim_create_user_command(
+    'PanelHideNeotree',
+    Panel.hide_neotree,
+    {}
+  )
+
   Panel.open_neotree()
 end
 
@@ -65,7 +76,7 @@ function Panel.cleanup()
 end
 
 --
--- Opening function
+-- Neotree
 --
 function Panel.open_neotree()
   if not Panel.windows.neotree -- create neotree window
@@ -90,6 +101,23 @@ function Panel.open_neotree()
     vim.api.nvim_set_current_win(Panel.windows.main)
   end
 end
+
+function Panel.hide_neotree()
+  if Panel.windows.neotree and vim.api.nvim_win_is_valid(Panel.windows.neotree) then
+    -- check if buf exists
+    if Panel.contents.neotree and vim.api.nvim_buf_is_valid(Panel.contents.neotree) then
+      Panel.contents.neotree = nil
+    end
+
+    -- close and set nil
+    vim.api.nvim_win_close(Panel.windows.neotree, true)
+    Panel.windows.neotree = nil
+  end
+end
+
+--
+-- Overseer
+--
 
 function Panel.open_bottom_box()
   vim.cmd("botright new")
