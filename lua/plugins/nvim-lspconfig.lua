@@ -10,12 +10,47 @@ return {
 
       vim.lsp.config("clangd", {
         capabilities = capabilities,
+        filetype = {
+          "c", "cpp",
+          "h", "hpp",
+          "objc", "objcpp",
+          "cuda"
+        },
+        root_markers = {
+          ".clangd",
+          "compile_commands.json",
+          "compile_flags.json",
+          "configure.ac",
+          ".git"
+        },
 				cmd = {
 					"clangd",
 					"--background-index",
 					"--clang-tidy",
 					"--header-insertion=never",
 				},
+      })
+
+      vim.lsp.config("lua_ls", {
+        settings = {
+          Lua = {
+            runtime = {
+              version = "LuaJIT",
+            },
+
+            workspace = {
+              library = {
+                vim.env.VIMRUNTIME,
+              },
+            },
+
+            diagnostics = {
+              globals = {
+                "vim",
+              },
+            },
+          },
+        },
       })
 
       vim.lsp.config("pyright", {
@@ -87,6 +122,7 @@ return {
 			})
 
       vim.lsp.enable("clangd")
+      vim.lsp.enable("lua_ls")
       vim.lsp.enable("pyright")
 			vim.lsp.enable("html")
 			vim.lsp.enable("emmet_language_server")
