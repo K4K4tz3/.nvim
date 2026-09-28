@@ -64,19 +64,25 @@ end
 -- Opening function
 --
 function Panel.open_neotree()
-  Panel.windows.neotree = vim.api.nvim_open_win(0, true, {
-    split = "left",
-    win = -1,
-    width = 30,
-  })
+  if not Panel.windows.neotree then -- create neotree window
+    Panel.windows.neotree = vim.api.nvim_open_win(0, true, {
+      split = "left",
+      win = -1,
+      width = 30,
+    })
+  end
 
-  require("neo-tree.command").execute({
-    action = "focus",
-    source = "filesystem",
-    position = "current",
-  })
+  if not Panel.contents.neotree
+      and not vim.api.nvim_buf_is_valid(Panel.contents.neotree)
+      and vim.bo[Panel.contents.neotree].filetype ~= "neo-tree" then
+    require("neo-tree.command").execute({
+      action = "focus",
+      source = "filesystem",
+      position = "current",
+    })
 
-  vim.api.nvim_set_current_win(Panel.windows.main)
+    vim.api.nvim_set_current_win(Panel.windows.main)
+  end
 end
 
 function Panel.open_bottom_box()
