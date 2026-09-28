@@ -34,11 +34,15 @@ function Panel.init()
 end
 
 function Panel.apply_layout()
-  vim.api.nvim_win_set_width(Panel.windows.neotree, 30)
+  if Panel.windows.neotree then
+    vim.api.nvim_win_set_width(Panel.windows.neotree, 30)
+  end
+
   if Panel.windows.bottom_left ~= nil then
     vim.api.nvim_win_set_height(Panel.windows.bottom_left, 10)
     vim.api.nvim_win_set_width(Panel.windows.bottom_left, 60)
   end
+
   if Panel.windows.bottom_right ~= nil then
     vim.api.nvim_win_set_height(Panel.windows.bottom_right, 10)
   end
