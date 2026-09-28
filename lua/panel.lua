@@ -120,13 +120,23 @@ end
 --
 
 function Panel.open_bottom_box()
-  vim.cmd("botright new")
-  Panel.windows.bottom_left = vim.api.nvim_get_current_win()
+  -- if both do not exist create left
+  if not Panel.check_win(Panel.windows.bottom_left) and not Panel.check_win(Panel.windows.bottom_right) then
+    vim.cmd("botright new")
+    Panel.windows.bottom_left = vim.api.nvim_get_current_win()
+  end
 
-  Panel.windows.bottom_right = vim.api.nvim_open_win(0, false, {
-    win = Panel.windows.bottom_left,
-    split = "right"
-  })
+  if not Panel.check_win(Panel.windows.bottom_left) then
+    Panel.windows.bottom_left = vim.api.nvim_open_win(vim.api.nvim_create_buf(false, true), false, {
+      win = Panel.windows.bottom_right,
+      split = "left"
+    })
+  elseif not Panel.check_win(Panel.windows.bottom_right) then
+    Panel.windows.bottom_right = vim.api.nvim_open_win(vim.api.nvim_create_buf(false, true), false, {
+      win = Panel.windows.bottom_left,
+      split = "right"
+    })
+  end
 
   vim.api.nvim_set_current_win(Panel.windows.main)
 end
