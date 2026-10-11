@@ -1,8 +1,15 @@
 local Panel = {
   win = nil,
   neotree = nil,
-  overseer = nil,
-  overseer_buf = nil,
+
+  windows = {
+    main = nil,
+    neotree = nil,
+  },
+  buffer = {
+    main = nil,
+    neotree = nil,
+  }
 }
 
 function Panel.test()
@@ -19,12 +26,31 @@ function Panel.test()
 end
 
 function Panel.init()
-  Panel.win = vim.api.nvim_get_current_win()
-  if Panel.win == nil then
+  Panel.windows.neotree = vim.api.nvim_get_current_win()
+  if Panel.windows.neotree == nil then
     return
   end
 
-  Panel.create_neotree()
+  require("neo-tree.command").execute({
+    action = "focus",
+    source = "filesystem",
+    position = "current",
+  })
+end
+
+function Panel.open_main()
+  if Panel.windows.main and vim.api.nvim_win_is_valid(Panel.windows.main) then
+    return
+  end
+
+  local main = vim.api.nvim_open_win(0, true, {
+    win = Panel.windows.neotree,
+    split = "right"
+  })
+
+  if main then
+    Panel.windows.main = main
+  end
 end
 
 function Panel.create_neotree()
@@ -43,23 +69,21 @@ function Panel.create_neotree()
   vim.api.nvim_set_current_win(Panel.win)
 end
 
-function Panel.create_overseer()
-  if Panel.overseer == nil then
-    Panel.overseer = vim.api.nvim_open_win(0, false, {
-      split = "below",
-      win = -1,
-      height = 25
-    })
+function Panel.set_overseer(task)
+  local buf_overseer_list = Panel.get_buf_by_filetype("OverseerList")
 
-    require("overseer").toggle({
-      enter = false,
-      winid = Panel.overseer
-    })
+  if buf_overseer_list then
+    Panel.buffer.bottom_left = buf_overseer_list
+    local win = Panel.get_win_from_buf(buf_overseer_list)
+
+    if win then
+      Panel.windows.bottom_left = win
+    end
   end
 end
 
 function Panel.apply_layout()
-  vim.api.nvim_win_set_width(Panel.neotree, 30)
+  vim.api.nvim_win_set_width(Panel.windows.neotree, 30)
 end
 
 function Panel.hide_overseer()
@@ -74,8 +98,16 @@ end
 
 function Panel.set_buf_and_open(file)
   local buf = vim.fn.bufadd(file)
-  vim.api.nvim_win_set_buf(Panel.win, buf)
-  vim.api.nvim_set_current_win(Panel.win)
+
+  if not Panel.win then
+    vim.api.nvim_open_win(buf, true, {
+      win = Panel.windows.neotree,
+      split = "right"
+    })
+  else
+    vim.api.nvim_win_set_buf(Panel.win, buf)
+    vim.api.nvim_set_current_win(Panel.win)
+  end
 end
 
 function Panel.test_dap()
@@ -84,10 +116,10 @@ function Panel.test_dap()
   vim.schedule(function()
     for _, buf in ipairs(vim.api.nvim_list_bufs()) do
       print(
-        "buf: " , buf,
-        "name: " , vim.api.nvim_buf_get_name(buf),
-        "filetype: " , vim.bo[buf].filetype,
-        "buftype: " , vim.bo[buf].buftype
+        "buf: ", buf,
+        "name: ", vim.api.nvim_buf_get_name(buf),
+        "filetype: ", vim.bo[buf].filetype,
+        "buftype: ", vim.bo[buf].buftype
       )
     end
   end)
@@ -95,6 +127,29 @@ end
 
 function Panel.get_panel()
   return Panel
+end
+
+function Panel.get_buf_by_filetype(filetype)
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.bo[buf].filetype == filetype then
+      return buf
+    end
+  end
+  vim.notify(
+    "Failed to find type: " .. filetype,
+    {
+      "Panel::get_buf_by_filetype"
+    }
+  )
+end
+
+function Panel.get_win_from_buf(bufnr)
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if vim.api.nvim_win_get_buf(win) == bufnr then
+      return win
+    end
+  end
+  return nil
 end
 
 return Panel

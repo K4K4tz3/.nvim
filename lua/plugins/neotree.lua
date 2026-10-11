@@ -26,6 +26,24 @@ return {
 					},
 				},
 			})
+      require("window-picker").setup({
+        filter_func = function()
+          local panel = require("panel")
+          local allowed = {}
+
+          panel.open_main()
+
+          local window_ids = vim.api.nvim_list_wins()
+
+          for _, winid in ipairs(window_ids) do
+            if winid == panel.windows.main then
+              table.insert(allowed, winid)
+            end
+          end
+
+          return allowed
+        end,
+      })
 		end,
   }
 }
