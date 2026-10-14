@@ -22,6 +22,7 @@ return {
           sequential = true,
         },
         "default",
+        "user.show_task_output"
       },
     }
   end,

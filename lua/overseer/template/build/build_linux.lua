@@ -16,6 +16,7 @@ return {
       components = {
         "default",
         "user.build_sound",
+        "user.show_task_output"
       },
     }
   end,

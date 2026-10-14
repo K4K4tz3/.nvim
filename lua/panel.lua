@@ -5,25 +5,22 @@ local Panel = {
   windows = {
     main = nil,
     neotree = nil,
+
+    bottom = {
+      left = nil,
+      right = nil,
+    }
   },
   buffer = {
     main = nil,
     neotree = nil,
+
+    bottom = {
+      left = nil,
+      right = nil,
+    }
   }
 }
-
-function Panel.test()
-  if Panel.win != nil then
-    return win
-  else
-    Panel.win = vim.api.nvim_get_current_win()
-    local buf = vim.api.nvim_create_buf(false, false)
-    vim.api.nvim_buf_set_lines(buf, 0, 1, false, {
-      "Hello from panel A",
-    })
-    vim.api.nvim_win_set_buf(Panel.win, buf)
-  end
-end
 
 function Panel.init()
   Panel.windows.neotree = vim.api.nvim_get_current_win()
@@ -36,6 +33,7 @@ function Panel.init()
     source = "filesystem",
     position = "current",
   })
+
 end
 
 function Panel.open_main()
@@ -69,15 +67,56 @@ function Panel.create_neotree()
   vim.api.nvim_set_current_win(Panel.win)
 end
 
-function Panel.set_overseer(task)
-  local buf_overseer_list = Panel.get_buf_by_filetype("OverseerList")
+function Panel.open_overseer()
+  -- check if overseer is already opened
+  if Panel.check_winbuf_condition(Panel.windows.bottom.left, Panel.buffer.bottom.left, "OverseerList")
+    and Panel.check_winbuf_condition(Panel.windows.bottom.right, Panel.buffer.bottom.right, "OverseerOutput") then
+    return
+  end
 
-  if buf_overseer_list then
-    Panel.buffer.bottom_left = buf_overseer_list
-    local win = Panel.get_win_from_buf(buf_overseer_list)
+  require("overseer").close()
+  Panel.clear_bottom()
 
-    if win then
-      Panel.windows.bottom_left = win
+  vim.notify("Open Overseer")
+
+  local window = require("overseer").open({
+    enter = true
+  })
+
+  if window then
+    local buffer = vim.api.nvim_win_get_buf(window)
+
+    if Panel.check_winbuf_condition(window, buffer, "OverseerList") then
+      -- If window and buffer correspond to OverseerList store their values
+      Panel.windows.bottom.left = window
+      Panel.buffer.bototm.left = buffer
+    else
+      vim.notify(
+        "Failed to retrieve window or buffer of OverseerList",
+        {
+          "Panel::open_overseer"
+        }
+      )
+    end
+  end
+
+  vim.cmd("wincmd l") -- move focus to overseer_output window
+
+  window = vim.api.nvim_get_current_win()
+  if window then
+    local buffer = vim.api.nvim_win_get_buf(window)
+
+    if Panel.check_winbuf_condition(window, buffer, "OverseerOutput") then
+      -- If window and buffer correspond to OverseerList store their values
+      Panel.windows.bottom.left = window
+      Panel.buffer.bototm.left = buffer
+    else
+      vim.notify(
+        "Failed to retrieve window or buffer of OverseerOutput",
+        {
+          "Panel::open_overseer"
+        }
+      )
     end
   end
 end
@@ -86,10 +125,25 @@ function Panel.apply_layout()
   vim.api.nvim_win_set_width(Panel.windows.neotree, 30)
 end
 
+--
+-- Clear/Hide
+--
+
 function Panel.hide_overseer()
   vim.api.nvim_win_hide(Panel.overseer)
   Panel.overseer = nil
 end
+
+function Panel.clear_bottom()
+  Panel.windows.bottom.left = nil
+  Panel.buffer.bottom.left = nil
+  Panel.windows.bottom.right = nil
+  Panel.buffer.bottom.right = nil
+end
+
+--
+-- Helper
+--
 
 function Panel.set_buf(file)
   local buf = vim.fn.bufadd(file)
@@ -150,6 +204,17 @@ function Panel.get_win_from_buf(bufnr)
     end
   end
   return nil
+end
+
+-- Validator to check window and buffer state to be valid and of certain type
+function Panel.check_winbuf_condition(window, buffer, type)
+  if window and vim.api.nvim_win_is_valid(window) then
+    if buffer and vim.api.nvim_buf_is_valid(buffer) then
+      if buffer.filetype == type then
+        return true
+      end
+    end
+  end
 end
 
 return Panel
