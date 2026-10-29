@@ -108,8 +108,8 @@ function Panel.open_overseer()
 
     if Panel.check_winbuf_condition(window, buffer, "OverseerOutput") then
       -- If window and buffer correspond to OverseerList store their values
-      Panel.windows.bottom.left = window
-      Panel.buffer.bototm.left = buffer
+      Panel.windows.bottom.right = window
+      Panel.buffer.bottom.right = buffer
     else
       vim.notify(
         "Failed to retrieve window or buffer of OverseerOutput",
