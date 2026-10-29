@@ -210,7 +210,7 @@ end
 function Panel.check_winbuf_condition(window, buffer, type)
   if window and vim.api.nvim_win_is_valid(window) then
     if buffer and vim.api.nvim_buf_is_valid(buffer) then
-      if buffer.filetype == type then
+      if vim.bo[buffer].filetype == type then
         return true
       end
     end
