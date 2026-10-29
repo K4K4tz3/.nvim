@@ -34,6 +34,31 @@ function Panel.init()
     position = "current",
   })
 
+
+  vim.api.nvim_create_user_command(
+    "PanelOpenOverseer",
+    function()
+      Panel.open_overseer()
+    end,
+    { desc = "Opens overseers console and output buffer"}
+  )
+
+  vim.api.nvim_create_user_command(
+    "PanelCloseOverseer",
+    function()
+      Panel.close_overseer()
+    end,
+    { desc = "Closes overseers console and output buffer"}
+  )
+
+  vim.api.nvim_create_user_command(
+    "PanelPrintData",
+    function()
+      Panel.print_data()
+    end,
+    { desc = "Prints the window/buffer data"}
+  )
+
 end
 
 function Panel.open_main()
@@ -79,9 +104,11 @@ function Panel.open_overseer()
 
   vim.notify("Open Overseer")
 
-  local window = require("overseer").open({
+  require("overseer").open({
     enter = true
   })
+
+  local window = vim.api.nvim_get_current_win()
 
   if window then
     local buffer = vim.api.nvim_win_get_buf(window)
@@ -89,7 +116,7 @@ function Panel.open_overseer()
     if Panel.check_winbuf_condition(window, buffer, "OverseerList") then
       -- If window and buffer correspond to OverseerList store their values
       Panel.windows.bottom.left = window
-      Panel.buffer.bototm.left = buffer
+      Panel.buffer.bottom.left = buffer
     else
       vim.notify(
         "Failed to retrieve window or buffer of OverseerList",
@@ -118,6 +145,18 @@ function Panel.open_overseer()
         }
       )
     end
+  end
+end
+
+function Panel.close_overseer()
+  if Panel.windows.bottom.left != nil and vim.api.nvim_win_is_valid(Panel.windows.bottom.left) then
+    vim.api.nvim_win_close(Panel.windows.bottom.left, true)
+    Panel.windows.bottom.left = nil
+  end
+
+  if Panel.windows.bottom.right != nil and vim.api.nvim_win_is_valid(Panel.windows.bottom.right) then
+    vim.api.nvim_win_close(Panel.windows.bottom.right, true)
+    Panel.windows.bottom.right = nil
   end
 end
 
@@ -215,6 +254,21 @@ function Panel.check_winbuf_condition(window, buffer, type)
       end
     end
   end
+end
+
+function Panel.print_data()
+  vim.notify(
+    "Windows: " ..
+    "\nLeft: " .. tostring(Panel.windows.bottom.left) ..
+    "\nRight: " .. tostring(Panel.windows.bottom.right) ..
+    "\nBuffer: " ..
+    "\nLeft: " .. tostring(Panel.buffer.bottom.left) ..
+    "\nRight: " .. tostring(Panel.buffer.bottom.right),
+    vim.log.levels.INFO,
+    {
+      title = "Panel::print_data"
+    }
+  )
 end
 
 return Panel
